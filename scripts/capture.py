@@ -1,2 +1,6 @@
+def capture_handler():
+    print('开始进行爬取')
+
+
 def run():
-    print('执行脚本成功')
+    capture_handler()
