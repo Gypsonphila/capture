@@ -31,6 +31,8 @@ def capture_handler():
             title = target_table_box.find_element(By.CLASS_NAME, "fl").text
             dl_list = target_table_box.find_element(By.CLASS_NAME, "dl_list").find_elements(By.CLASS_NAME, "clearfix")
 
+            table_row_list[title] = []
+
             for i, dl in enumerate(dl_list):
                 if i != 0:
                     dd_list = dl.find_elements(By.TAG_NAME, "dd")
@@ -39,7 +41,7 @@ def capture_handler():
                     for dd in dd_list:
                         dd_text = dd.text
                         row_list.append(dd_text)
-                    table_row_list[title] = row_list
+                    table_row_list[title].append(row_list)
 
             browser.close()
             browser.switch_to.window(handles[0])
