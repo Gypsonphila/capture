@@ -16,6 +16,9 @@
 - django
 - psycopg2
 - django-extensions
+- selenium
+  - 下载安装包指令
+    > pip install selenium==3.14 -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 
 ## 执行脚本
 ```bash
