@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'capture',
 ]
 
 MIDDLEWARE = [
@@ -74,13 +75,13 @@ WSGI_APPLICATION = 'capture_script.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'ATOMIC_REQUESTS': True,
-        'NAME': 'ch_db',
-        'HOST': 'localhost',
-        'USER': 'postgres',
+        'NAME': 'capture',
+        'HOST': '127.0.0.1',
+        'USER': 'root',
         'PASSWORD': '123456',
-        'PORT': 5432,
+        'PORT': 3306,
     }
 }
 

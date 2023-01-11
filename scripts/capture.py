@@ -2,8 +2,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import datetime
 
+from capture.models import ShangHaiFutures, ZhengZhouFutures, DaLianFutures
+
 
 URL = 'https://futures.cngold.org/hangqing/'
+DB_FIELD_LIST = ["bourse_name", "code", "name", "newest_price", "amount_increase_price", "amount_increase", "opening_price", "top_price", "bottom_price", "yesterday_price", "update_time"]
 
 
 def create_browser_client():
@@ -21,7 +24,6 @@ def capture_handler():
         target_box = browser.find_element(By.XPATH, "/html/body/div[3]/div[3]")
         tabs = target_box.find_element(By.TAG_NAME, "ul").find_elements(By.TAG_NAME, 'li')
 
-        table_row_list = {}
         for li in tabs:
             li.click()
             handles = browser.window_handles
@@ -31,17 +33,22 @@ def capture_handler():
             title = target_table_box.find_element(By.CLASS_NAME, "fl").text
             dl_list = target_table_box.find_element(By.CLASS_NAME, "dl_list").find_elements(By.CLASS_NAME, "clearfix")
 
-            table_row_list[title] = []
-
+            insert_dict = {DB_FIELD_LIST[0]: title}
             for i, dl in enumerate(dl_list):
                 if i != 0:
                     dd_list = dl.find_elements(By.TAG_NAME, "dd")
 
-                    row_list = []
-                    for dd in dd_list:
+                    for dd_idx, dd in enumerate(dd_list):
                         dd_text = dd.text
-                        row_list.append(dd_text)
-                    table_row_list[title].append(row_list)
+                        insert_idx = dd_idx + 1
+                        insert_dict[DB_FIELD_LIST[insert_idx]] = dd_text
+
+                    if title == '上海期货交易所':
+                        ShangHaiFutures.objects.update_or_create(insert_dict, code=insert_dict[DB_FIELD_LIST[1]])
+                    elif title == '郑州商品交易所':
+                        ZhengZhouFutures.objects.update_or_create(insert_dict, code=insert_dict[DB_FIELD_LIST[1]])
+                    elif title == '大连商品交易所':
+                        DaLianFutures.objects.update_or_create(insert_dict, code=insert_dict[DB_FIELD_LIST[1]])
 
             browser.close()
             browser.switch_to.window(handles[0])
